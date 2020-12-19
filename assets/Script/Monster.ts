@@ -5,31 +5,54 @@ export default class Monster extends cc.Component {
   @property(cc.Vec2)
   speed: cc.Vec2 = cc.v2(50, 0);
 
+  // @property(cc.Integer)
+  testNumber: number = 90;
+
   contactDict: Object = {};
 
   weapon: number = 0;
 
-  update() {
-    const wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
-    const wps2 = this.node.convertToWorldSpaceAR(cc.v2(-50, 0));
-    const wps3 = this.node.convertToWorldSpaceAR(cc.v2(50, 0));
+  onLoad() {
+    const rigid = this.node.getComponent(cc.RigidBody);
+    this.node.scaleX = -rigid.linearVelocity.x > 0 ? -1 : 1;
+  }
 
-    const left = this.rayTest(wps1, wps2),
+  update() {
+    const wps0 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
+    const wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
+    const wps2 = this.node.convertToWorldSpaceAR(cc.v2(-this.testNumber, 0));
+    const wps3 = this.node.convertToWorldSpaceAR(cc.v2(this.testNumber, 0));
+
+    const left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
+
     if (left && right) {
       const rigid = this.node.getComponent(cc.RigidBody);
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
     } else {
+      if (left) {
+        const rigid = this.node.getComponent(cc.RigidBody);
+        if (!rigid.linearVelocity.x) {
+          rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
+        }
+      }
+      if (right) {
+        const rigid = this.node.getComponent(cc.RigidBody);
+        if (!rigid.linearVelocity.x) {
+          rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+        }
+      }
     }
   }
 
   rayTest(posFirst: cc.Vec2, posSecond: cc.Vec2) {
     const result = cc.director
       .getPhysicsManager()
-      .rayCast(posFirst, posSecond, cc.RayCastType.Any);
+      .rayCast(posFirst, posSecond, cc.RayCastType.Closest);
 
     let existBlock = false;
     result.forEach((item: cc.PhysicsRayCastResult) => {
+      if (true == existBlock) return;
       if (item.collider.tag == 0) {
         existBlock = true;
       }
