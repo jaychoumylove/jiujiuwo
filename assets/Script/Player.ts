@@ -10,23 +10,23 @@ export default class Player extends cc.Component {
   weapon: number = 0;
 
   update() {
-    const wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
-    const wps2 = this.node.convertToWorldSpaceAR(cc.v2(-50, 0));
-    const wps3 = this.node.convertToWorldSpaceAR(cc.v2(50, 0));
-
-    const left = this.rayTest(wps1, wps2),
+    const rigid = this.node.getComponent(cc.RigidBody),
+      wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0)),
+      wps2 = this.node.convertToWorldSpaceAR(cc.v2(-50, 0)),
+      wps3 = this.node.convertToWorldSpaceAR(cc.v2(50, 0)),
+      left = this.rayTest(wps1, wps2),
       right = this.rayTest(wps1, wps3);
+
     if (left && right) {
-      const rigid = this.node.getComponent(cc.RigidBody);
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
     } else {
-      if (left) {
-        const rigid = this.node.getComponent(cc.RigidBody);
-        rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
-      }
-      if (right) {
-        const rigid = this.node.getComponent(cc.RigidBody);
-        rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+      if (rigid.linearVelocity.y == 0) {
+        if (left) {
+          rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
+        }
+        if (right) {
+          rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+        }
       }
     }
   }
