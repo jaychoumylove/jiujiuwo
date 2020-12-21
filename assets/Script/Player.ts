@@ -1,40 +1,68 @@
 const { ccclass, property } = cc._decorator;
 
+type PlayerAnimationMapKey =
+  | "player_walk"
+  | "player_success"
+  | "player_stand"
+  | "player_fail";
 @ccclass
 export default class Player extends cc.Component {
-  @property(cc.Vec2)
-  speed: cc.Vec2 = cc.v2(50, 0);
+  // @property(cc.Vec2)
+  speed: cc.Vec2 = cc.v2(100, 0);
 
   // @property(cc.Integer)
-  testNumber: number = 100;
+  testNumber: number = 50;
 
   contactDict: Object = {};
 
   weapon: number = 0;
 
   update() {
+    const point = this.getLRPoint();
+    const wps0 = this.node.convertToWorldSpaceAR(point.left);
+    const wps1 = this.node.convertToWorldSpaceAR(point.right);
+    const wps2 = this.node.convertToWorldSpaceAR(
+      cc.v2(point.left.x - this.testNumber, 0)
+    );
+    const wps3 = this.node.convertToWorldSpaceAR(
+      cc.v2(point.right.x + this.testNumber, 0)
+    );
+
     const rigid = this.node.getComponent(cc.RigidBody),
-      wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0)),
-      wps2 = this.node.convertToWorldSpaceAR(cc.v2(-this.testNumber, 0)),
-      wps3 = this.node.convertToWorldSpaceAR(cc.v2(this.testNumber, 0)),
-      left = this.rayTest(wps1, wps2),
+      left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
     if (left && right) {
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
+      this.animationPlay("player_stand");
     } else {
       if (rigid.linearVelocity.y == 0) {
         if (left) {
           if (!rigid.linearVelocity.x) {
             rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
+            this.animationPlay("player_walk");
           }
         }
         if (right) {
           if (!rigid.linearVelocity.x) {
             rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+            this.animationPlay("player_walk");
           }
         }
       }
     }
+  }
+
+  getLRPoint() {
+    const left = cc.v2(-this.node.width / 2, 0);
+    const right = cc.v2(this.node.width / 2, 0);
+    return { left, right };
+  }
+
+  animationPlay(key: PlayerAnimationMapKey) {
+    const anim = this.node.getComponent(cc.Animation);
+
+    anim.pause();
+    anim.play(key);
   }
 
   rayTest(posFirst: cc.Vec2, posSecond: cc.Vec2) {
@@ -81,7 +109,7 @@ export default class Player extends cc.Component {
 
   contactWithMonster(otherCollider: cc.Collider) {
     console.log(this.weapon ? "win" : "die");
-    console.log(this.weapon);
+    this.animationPlay(this.weapon ? "player_success" : "player_fail");
     cc.director.getPhysicsManager().enabled = false;
   }
 

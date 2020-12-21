@@ -2,11 +2,11 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Monster extends cc.Component {
-  @property(cc.Vec2)
-  speed: cc.Vec2 = cc.v2(50, 0);
+  // @property(cc.Vec2)
+  speed: cc.Vec2 = cc.v2(100, 0);
 
   // @property(cc.Integer)
-  testNumber: number = 90;
+  testNumber: number = 50;
 
   contactDict: Object = {};
 
@@ -18,10 +18,15 @@ export default class Monster extends cc.Component {
   }
 
   update() {
-    const wps0 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
-    const wps1 = this.node.convertToWorldSpaceAR(cc.v2(0, 0));
-    const wps2 = this.node.convertToWorldSpaceAR(cc.v2(-this.testNumber, 0));
-    const wps3 = this.node.convertToWorldSpaceAR(cc.v2(this.testNumber, 0));
+    const point = this.getLRPoint();
+    const wps0 = this.node.convertToWorldSpaceAR(point.left);
+    const wps1 = this.node.convertToWorldSpaceAR(point.right);
+    const wps2 = this.node.convertToWorldSpaceAR(
+      cc.v2(point.left.x - this.testNumber, 0)
+    );
+    const wps3 = this.node.convertToWorldSpaceAR(
+      cc.v2(point.right.x + this.testNumber, 0)
+    );
 
     const left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
@@ -43,6 +48,24 @@ export default class Monster extends cc.Component {
         }
       }
     }
+  }
+
+  getLRPoint() {
+    const collider = this.node.getComponent(cc.PhysicsPolygonCollider).points;
+    const colliderX = collider.map((item) => {
+      return item.x;
+    });
+
+    const leftX = Math.min(...colliderX);
+    const rightX = Math.max(...colliderX);
+
+    const leftPos = collider.find((item) => item.x == leftX);
+    const rightPos = collider.find((item) => item.x == rightX);
+
+    return {
+      left: leftPos,
+      right: rightPos,
+    };
   }
 
   rayTest(posFirst: cc.Vec2, posSecond: cc.Vec2) {

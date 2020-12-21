@@ -32,7 +32,7 @@ export default class HardCore extends cc.Component {
     });
     this.touchOnce = cc
       .tween(target)
-      .to(1, move)
+      .to(0.3, move)
       .call(() => {
         this.touchOnce = null;
         this.updateStatus();

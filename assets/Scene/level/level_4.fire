@@ -58,7 +58,7 @@
     "_groupIndex": 0,
     "groupIndex": 0,
     "autoReleaseAssets": false,
-    "_id": "85dbf996-b9af-4134-b7be-6d9214d2806e"
+    "_id": "f7a2ad58-8845-471e-b1fa-686b4f6034a5"
   },
   {
     "__type__": "cc.Node",
@@ -195,7 +195,7 @@
       "array": [
         0,
         0,
-        844.3747686898278,
+        800.2074730968213,
         0,
         0,
         0,
@@ -293,7 +293,7 @@
       "array": [
         0,
         0,
-        844.3747686898278,
+        800.2074730968213,
         0,
         0,
         0,
@@ -2789,7 +2789,6 @@
       "x": 50,
       "y": 0
     },
-    "testNumber": 100,
     "_id": "06GXBYbulIjJe9GBtbz5fg"
   },
   {
@@ -3761,7 +3760,6 @@
       "x": 50,
       "y": 0
     },
-    "testNumber": 100,
     "_id": "49fHLj3MNJU7z9lxhac0t8"
   },
   {
