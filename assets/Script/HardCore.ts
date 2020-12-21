@@ -1,3 +1,5 @@
+import Game from "./Game";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -18,6 +20,8 @@ export default class HardCore extends cc.Component {
 
   handleTouch() {
     if (this.touchOnce) return;
+    const gameScript: Game = cc.find("Canvas").getComponent("Game");
+    if (gameScript.state != "pending") return;
     const target = this.node;
     const move = {
       x: target.x,

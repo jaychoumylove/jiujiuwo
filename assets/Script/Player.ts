@@ -1,3 +1,6 @@
+import Game from "./Game";
+import { delay, toggleModal } from "./Util/Common";
+
 const { ccclass, property } = cc._decorator;
 
 type PlayerAnimationMapKey =
@@ -112,14 +115,20 @@ export default class Player extends cc.Component {
 
   contactWithMonster(otherCollider: cc.Collider) {
     console.log(this.weapon ? "win" : "die");
-    this.animationPlay(this.weapon ? "player_success" : "player_fail");
+    const gameScript: Game = cc.find("Canvas").getComponent("Game");
+    this.weapon ? gameScript.dispatchSuccess() : gameScript.disptachFail();
     cc.director.getPhysicsManager().enabled = false;
-    if (this.weapon) {
-      this.win();
-    }
+    this.weapon ? this.win() : this.lose();
+  }
+
+  async lose() {
+    this.animationPlay("player_fail");
+    await delay(1000);
+    toggleModal("settle", true, false);
   }
 
   win() {
+    this.animationPlay("player_stand");
     this.playerWeapon.setPosition(this.node.position);
     cc.find("Canvas").addChild(this.playerWeapon);
     const monsterNode = cc.find("Canvas/monster");
@@ -132,11 +141,14 @@ export default class Player extends cc.Component {
     }, 50);
     cc.tween(this.playerWeapon)
       .to(0.7, { x: monsterNode.x, y: monsterNode.y })
-      .call(() => {
+      .call(async () => {
+        this.animationPlay("player_success");
         monsterNode.destroy();
         this.playerWeapon.destroy();
         this.playerWeapon = null;
         this.cleanPlayerWeaponTimer();
+        await delay(1000);
+        toggleModal("settle", true, true);
       })
       .start();
   }

@@ -3,10 +3,10 @@
   "_name": "player_fail",
   "_objFlags": 0,
   "_native": "",
-  "_duration": 0.016666666666666666,
+  "_duration": 0.05,
   "sample": 60,
-  "speed": 1,
-  "wrapMode": 1,
+  "speed": 0.1,
+  "wrapMode": 2,
   "curveData": {
     "comps": {
       "cc.Sprite": {
@@ -14,7 +14,19 @@
           {
             "frame": 0,
             "value": {
-              "__uuid__": "3e646002-5ead-447d-894c-5cba5ae18444"
+              "__uuid__": "fd5f4657-1cb5-437d-8fd4-157d613d8b89"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "67319173-9330-44bc-b2af-8109f3b62561"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "e74cfc57-860f-4a70-a7d7-834c49e0aca0"
             }
           }
         ]

@@ -1,9 +1,13 @@
+import { toggleModal } from "./Util/Common";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Game extends cc.Component {
   @property()
   debug: boolean = false;
+
+  state: "win" | "lose" | "pending" = "pending";
 
   @property()
   G: cc.Vec2 = cc.v2(0, -300);
@@ -23,5 +27,13 @@ export default class Game extends cc.Component {
       physicsManager.debugDrawFlags = 0;
     }
     physicsManager.gravity = this.G;
+  }
+
+  dispatchSuccess() {
+    this.state = "win";
+  }
+
+  disptachFail() {
+    this.state = "lose";
   }
 }

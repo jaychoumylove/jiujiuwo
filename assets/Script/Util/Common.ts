@@ -24,3 +24,28 @@ export const getAudioManager: () => AudioManager = () => {
 export const isWx = () => {
   return cc.sys.platform == cc.sys.WECHAT_GAME;
 };
+
+export const toggleModal = (
+  contanier?: string,
+  state?: boolean,
+  gameState?: boolean
+) => {
+  if (!state) state = false;
+
+  if (true == state && !contanier) return;
+
+  const modal = cc.find("Canvas/ui/modal");
+  if (contanier) {
+    const contanierNode = cc.find(contanier, modal);
+    if (contanier == "settle") {
+      contanierNode.getComponent("Settle").init(gameState ? "win" : "lose");
+    }
+    contanierNode.active = state;
+  } else {
+    modal.children.map((childNode) => {
+      childNode.active = false;
+    });
+  }
+  modal.active = state;
+  cc.find("bg", modal).active = state;
+};

@@ -19,7 +19,12 @@ export default class GameBtn extends cc.Component {
     this.node.on(eventType, this.handleClick, this);
   }
 
-  handleClick() {
+  handleClick(evt, param) {
+    console.log("touch in");
+
+    if (param) {
+      this.type = param;
+    }
     // getAudioManager().playOnceMusic("button");
     let call: Function;
     switch (this.type) {
@@ -38,8 +43,10 @@ export default class GameBtn extends cc.Component {
       //   cc.director.loadScene("level");
       //   break;
       case "replay":
-        this.resume();
-        cc.director.loadScene(cc.director.getScene().name);
+        // this.resume();
+        // console.log(cc.director.getScene().name);
+        // cc.director.loadScene(cc.director.getScene().name);
+        cc.director.loadScene("level_1");
         break;
       // case "jump_level":
       //   this.resume();
