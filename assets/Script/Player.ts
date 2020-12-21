@@ -17,20 +17,23 @@ export default class Player extends cc.Component {
 
   weapon: number = 0;
 
-  update() {
-    const point = this.getLRPoint();
-    const wps0 = this.node.convertToWorldSpaceAR(point.left);
-    const wps1 = this.node.convertToWorldSpaceAR(point.right);
-    const wps2 = this.node.convertToWorldSpaceAR(
-      cc.v2(point.left.x - this.testNumber, 0)
-    );
-    const wps3 = this.node.convertToWorldSpaceAR(
-      cc.v2(point.right.x + this.testNumber, 0)
-    );
+  playerWeapon: cc.Node = null;
+  playerWeaponTimer: number;
 
-    const rigid = this.node.getComponent(cc.RigidBody),
+  update() {
+    const point = this.getLRPoint(),
+      wps0 = this.node.convertToWorldSpaceAR(point.left),
+      wps1 = this.node.convertToWorldSpaceAR(point.right),
+      wps2 = this.node.convertToWorldSpaceAR(
+        cc.v2(point.left.x - this.testNumber, 0)
+      ),
+      wps3 = this.node.convertToWorldSpaceAR(
+        cc.v2(point.right.x + this.testNumber, 0)
+      ),
+      rigid = this.node.getComponent(cc.RigidBody),
       left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
+
     if (left && right) {
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
       this.animationPlay("player_stand");
@@ -111,10 +114,44 @@ export default class Player extends cc.Component {
     console.log(this.weapon ? "win" : "die");
     this.animationPlay(this.weapon ? "player_success" : "player_fail");
     cc.director.getPhysicsManager().enabled = false;
+    if (this.weapon) {
+      this.win();
+    }
+  }
+
+  win() {
+    this.playerWeapon.setPosition(this.node.position);
+    cc.find("Canvas").addChild(this.playerWeapon);
+    const monsterNode = cc.find("Canvas/monster");
+    this.playerWeaponTimer = setInterval(() => {
+      if (this.playerWeapon) {
+        this.playerWeapon.angle += 20;
+      } else {
+        this.cleanPlayerWeaponTimer();
+      }
+    }, 50);
+    cc.tween(this.playerWeapon)
+      .to(0.7, { x: monsterNode.x, y: monsterNode.y })
+      .call(() => {
+        monsterNode.destroy();
+        this.playerWeapon.destroy();
+        this.playerWeapon = null;
+        this.cleanPlayerWeaponTimer();
+      })
+      .start();
+  }
+
+  cleanPlayerWeaponTimer() {
+    if (this.playerWeaponTimer) {
+      clearInterval(this.playerWeaponTimer);
+      this.playerWeaponTimer = null;
+    }
   }
 
   contactWithWeapon(otherCollider: cc.Collider) {
     this.weapon++;
+    this.playerWeapon = cc.instantiate(otherCollider.node);
+    otherCollider.node.destroy();
   }
 
   onPostSolve(

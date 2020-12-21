@@ -3,10 +3,10 @@
   "_name": "player_walk",
   "_objFlags": 0,
   "_native": "",
-  "_duration": 0.016666666666666666,
+  "_duration": 0.06666666666666667,
   "sample": 60,
-  "speed": 1,
-  "wrapMode": 1,
+  "speed": 0.1,
+  "wrapMode": 2,
   "curveData": {
     "comps": {
       "cc.Sprite": {
@@ -14,7 +14,25 @@
           {
             "frame": 0,
             "value": {
-              "__uuid__": "6b393227-3a15-414b-a931-cc2e4367a6fb"
+              "__uuid__": "3e646002-5ead-447d-894c-5cba5ae18444"
+            }
+          },
+          {
+            "frame": 0.016666666666666666,
+            "value": {
+              "__uuid__": "2595067e-3895-4cbb-9b49-70a27e514769"
+            }
+          },
+          {
+            "frame": 0.03333333333333333,
+            "value": {
+              "__uuid__": "028cf9fa-db3f-4484-9685-3238ab3f359b"
+            }
+          },
+          {
+            "frame": 0.05,
+            "value": {
+              "__uuid__": "6fb659c6-90a5-4ff0-94f8-f8ce0d607a5f"
             }
           }
         ]

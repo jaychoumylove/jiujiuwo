@@ -1,5 +1,6 @@
 const { ccclass, property } = cc._decorator;
 
+type MonsterAnimationMapKey = "monster_walk" | "monster_stand" | null;
 @ccclass
 export default class Monster extends cc.Component {
   // @property(cc.Vec2)
@@ -18,33 +19,35 @@ export default class Monster extends cc.Component {
   }
 
   update() {
-    const point = this.getLRPoint();
-    const wps0 = this.node.convertToWorldSpaceAR(point.left);
-    const wps1 = this.node.convertToWorldSpaceAR(point.right);
-    const wps2 = this.node.convertToWorldSpaceAR(
-      cc.v2(point.left.x - this.testNumber, 0)
-    );
-    const wps3 = this.node.convertToWorldSpaceAR(
-      cc.v2(point.right.x + this.testNumber, 0)
-    );
-
-    const left = this.rayTest(wps0, wps2),
+    const point = this.getLRPoint(),
+      wps0 = this.node.convertToWorldSpaceAR(point.left),
+      wps1 = this.node.convertToWorldSpaceAR(point.right),
+      wps2 = this.node.convertToWorldSpaceAR(
+        cc.v2(point.left.x - this.testNumber, 0)
+      ),
+      wps3 = this.node.convertToWorldSpaceAR(
+        cc.v2(point.right.x + this.testNumber, 0)
+      ),
+      left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
 
     if (left && right) {
       const rigid = this.node.getComponent(cc.RigidBody);
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
+      this.animationPlay("monster_stand");
     } else {
       if (left) {
         const rigid = this.node.getComponent(cc.RigidBody);
         if (!rigid.linearVelocity.x) {
           rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
+          this.animationPlay("monster_walk");
         }
       }
       if (right) {
         const rigid = this.node.getComponent(cc.RigidBody);
         if (!rigid.linearVelocity.x) {
           rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+          this.animationPlay("monster_walk");
         }
       }
     }
@@ -98,6 +101,9 @@ export default class Monster extends cc.Component {
         // 墙壁
         this.contactWithBlock(otherCollider);
         break;
+      case 1:
+        this.contactWithPlayer(otherCollider);
+        break;
     }
   }
 
@@ -107,6 +113,18 @@ export default class Monster extends cc.Component {
     if (this.contactDict.hasOwnProperty(key)) {
       delete this.contactDict[key];
     }
+  }
+
+  animationPlay(key?: MonsterAnimationMapKey) {
+    const anim = this.node.getComponent(cc.Animation);
+    anim.pause();
+    if (key) {
+      anim.play(key);
+    }
+  }
+
+  contactWithPlayer(otherCollider: cc.Collider) {
+    this.animationPlay();
   }
 
   contactWithBlock(otherCollider: cc.Collider) {

@@ -16,10 +16,10 @@ export default class Weapon extends cc.Component {
     console.log(otherCollider.node.uuid);
 
     switch (otherCollider.tag) {
-      case 1:
-        // 碰到玩家
-        this.contactWithPlayer(otherCollider);
-        break;
+      // case 1:
+      //   // 碰到玩家
+      //   this.contactWithPlayer(otherCollider);
+      //   break;
       case 2:
         // 碰到怪物
         this.contactWithMonster(otherCollider);
