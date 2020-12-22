@@ -1,3 +1,4 @@
+import HardCore from "./HardCore";
 import { toggleModal } from "./Util/Common";
 
 const { ccclass, property } = cc._decorator;
@@ -31,9 +32,18 @@ export default class Game extends cc.Component {
 
   dispatchSuccess() {
     this.state = "win";
+    this.cleanHardCord();
   }
 
   disptachFail() {
     this.state = "lose";
+    this.cleanHardCord();
+  }
+
+  cleanHardCord() {
+    cc.find("Canvas/affix").children.map((item: cc.Node) => {
+      const script: HardCore = item.getComponent("HardCore");
+      script.clean();
+    });
   }
 }

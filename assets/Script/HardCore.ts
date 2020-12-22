@@ -7,6 +7,9 @@ export default class HardCore extends cc.Component {
   @property()
   dir: "left" | "right" | "top" | "bottom" = "left";
 
+  @property(cc.Integer)
+  moveNumber: number = 150;
+
   status: "OFF" | "ON" = "OFF";
 
   direction: cc.Vec2 = cc.v2(0, 0);
@@ -21,7 +24,9 @@ export default class HardCore extends cc.Component {
   handleTouch() {
     if (this.touchOnce) return;
     const gameScript: Game = cc.find("Canvas").getComponent("Game");
-    if (gameScript.state != "pending") return;
+    if (gameScript.state != "pending") {
+      return;
+    }
     const target = this.node;
     const move = {
       x: target.x,
@@ -29,7 +34,7 @@ export default class HardCore extends cc.Component {
     };
     ["x", "y"].map((item) => {
       if (this.direction[item] != 0) {
-        const moveNum = this.direction[item] * (this.node.width - 20);
+        const moveNum = this.direction[item] * this.moveNumber;
         const moveNumber = this.status == "ON" ? -moveNum : moveNum;
         move[item] += moveNumber;
       }
@@ -65,5 +70,9 @@ export default class HardCore extends cc.Component {
 
   updateStatus() {
     this.status = this.status == "ON" ? "OFF" : "ON";
+  }
+
+  clean() {
+    this.node.off(cc.Node.EventType.TOUCH_START, this.handleTouch, this);
   }
 }

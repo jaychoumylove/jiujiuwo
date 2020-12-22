@@ -32,7 +32,7 @@ export default class Settle extends cc.Component {
     cc.find("goNext", this.node).getComponent(cc.Label).string = "不了，谢谢";
     const monsterNode = cc.find("monster", this.node);
     monsterNode.angle = 270;
-    monsterNode.y = 0;
+    // monsterNode.y = 0;
   }
 
   initLoseLable() {
@@ -43,6 +43,6 @@ export default class Settle extends cc.Component {
     cc.find("goNext", this.node).getComponent(cc.Label).string = "不了，谢谢";
     const playerNode = cc.find("player", this.node);
     playerNode.angle = 90;
-    playerNode.y = 0;
+    // playerNode.y = 0;
   }
 }

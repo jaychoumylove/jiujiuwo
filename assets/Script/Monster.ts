@@ -31,23 +31,23 @@ export default class Monster extends cc.Component {
       left = this.rayTest(wps0, wps2),
       right = this.rayTest(wps1, wps3);
 
+    const rigid = this.node.getComponent(cc.RigidBody);
     if (left && right) {
-      const rigid = this.node.getComponent(cc.RigidBody);
       rigid.linearVelocity = cc.v2(0, rigid.linearVelocity.y);
       this.animationPlay("monster_stand");
     } else {
-      if (left) {
-        const rigid = this.node.getComponent(cc.RigidBody);
-        if (!rigid.linearVelocity.x) {
-          rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
-          this.animationPlay("monster_walk");
+      if (rigid.linearVelocity.y == 0) {
+        if (left) {
+          if (!rigid.linearVelocity.x) {
+            rigid.linearVelocity = cc.v2(this.speed.x, rigid.linearVelocity.y);
+            this.animationPlay("monster_walk");
+          }
         }
-      }
-      if (right) {
-        const rigid = this.node.getComponent(cc.RigidBody);
-        if (!rigid.linearVelocity.x) {
-          rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
-          this.animationPlay("monster_walk");
+        if (right) {
+          if (!rigid.linearVelocity.x) {
+            rigid.linearVelocity = cc.v2(-this.speed.x, rigid.linearVelocity.y);
+            this.animationPlay("monster_walk");
+          }
         }
       }
     }
