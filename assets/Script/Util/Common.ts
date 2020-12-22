@@ -24,32 +24,62 @@ export const getAudioManager: () => AudioManager = () => {
 };
 
 export const isWx = () => {
-  return cc.sys.platform == cc.sys.WECHAT_GAME;
+  // return cc.sys.platform == cc.sys.WECHAT_GAME;
+  return false;
+};
+
+export const closeModal = () => {
+  const modal = cc.find("Canvas/ui/modal");
+  modal.children.map((childNode) => {
+    childNode.active = false;
+  });
+  modal.active = false;
+  cc.find("bg", modal).active = false;
 };
 
 export const toggleModal = (
   contanier?: string,
   state?: boolean,
-  gameState?: boolean
+  gameState?: boolean | Function
 ) => {
   if (!state) state = false;
 
   if (true == state && !contanier) return;
 
   const modal = cc.find("Canvas/ui/modal");
+  if (!modal) return;
   if (contanier) {
+    if (state) {
+      modal.children.map((childNode) => {
+        childNode.active = false;
+      });
+    }
     const contanierNode = cc.find(contanier, modal);
+    if (contanierNode.active == state) return;
     if (contanier == "settle") {
       contanierNode.getComponent("Settle").init(gameState ? "win" : "lose");
     }
     contanierNode.active = state;
+    if (contanier == "loadingBg") {
+      if (typeof gameState == "function") {
+        gameState && gameState();
+      }
+    }
   } else {
     modal.children.map((childNode) => {
       childNode.active = false;
     });
   }
   modal.active = state;
-  cc.find("bg", modal).active = state;
+  if (contanier !== "loadingBg") {
+    cc.find("bg", modal).active = state;
+  } else {
+    cc.find("bg", modal).active = false;
+  }
+};
+
+export const getLoadingModal = () => {
+  return cc.find("Canvas/ui/modal/loadingBg");
 };
 
 export const supportNumberGroup = (list: [], number: number) => {

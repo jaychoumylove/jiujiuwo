@@ -1,3 +1,4 @@
+import { loadLevelScene, loadLevelSceneByLv } from "../state/Level";
 import { checkHeart, descreaseHeart, setCurrentLevel } from "../state/User";
 import { getAudioManager, toggleModal } from "../util/Common";
 
@@ -22,14 +23,12 @@ export default class LevelItem extends cc.Component {
     if (status == "lock") return;
     // 加留存，不检测体力
 
-    if (!checkHeart()) {
-      toggleModal("AdHeart", true);
-      return;
-    }
-    descreaseHeart();
-    cc.director.loadScene(`level_${lv}`, () => {
-      setCurrentLevel(lv);
-    });
+    // if (!checkHeart()) {
+    //   toggleModal("AdHeart", true);
+    //   return;
+    // }
+    // descreaseHeart();
+    loadLevelSceneByLv(lv);
   }
 
   public init(lvInfo) {

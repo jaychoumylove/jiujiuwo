@@ -1,5 +1,6 @@
 import HardCore from "./HardCore";
 import { preLoadLevelScene, unlockNextLevel } from "./state/Level";
+import { toggleModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -12,10 +13,23 @@ export default class Game extends cc.Component {
 
   @property()
   G: cc.Vec2 = cc.v2(0, -300);
+  clickOpenTimer: number;
 
   onLoad() {
     this.initPhysics();
     preLoadLevelScene("next");
+    this.initClickOpen();
+  }
+
+  initClickOpen() {
+    this.clickOpenTimer = setInterval(() => {
+      const target = cc.find("Canvas/ui/modal/ClickOpen");
+      if (target) {
+        this.cleanHardCord();
+        toggleModal("ClickOpen", true);
+        clearInterval(this.clickOpenTimer);
+      }
+    }, 300);
   }
 
   initPhysics() {

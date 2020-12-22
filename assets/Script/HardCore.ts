@@ -75,4 +75,8 @@ export default class HardCore extends cc.Component {
   clean() {
     this.node.off(cc.Node.EventType.TOUCH_START, this.handleTouch, this);
   }
+
+  add() {
+    this.node.on(cc.Node.EventType.TOUCH_START, this.handleTouch, this);
+  }
 }

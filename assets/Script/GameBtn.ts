@@ -11,7 +11,7 @@ import {
   increaseCoin,
   increaseHeartByAd,
 } from "./state/User";
-import { isWx, toggleModal } from "./util/Common";
+import { closeModal, isWx, toggleModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -53,15 +53,8 @@ export default class GameBtn extends cc.Component {
         cc.director.loadScene("level");
         break;
       case "replay":
-        // this.resume();
-        // console.log(cc.director.getScene().name);
-        // cc.director.loadScene(cc.director.getScene().name);
         const currentLevel = getCurrentLevel();
-        if (!checkHeart()) {
-          toggleModal("AdHeart", true);
-        } else {
-          cc.director.loadScene(`level_${currentLevel}`);
-        }
+        cc.director.loadScene(`level_${currentLevel}`);
         break;
       case "jumpLevel":
         call = () => {
@@ -82,7 +75,11 @@ export default class GameBtn extends cc.Component {
         call = () => {
           const currentInfo = getCurrentLevelInfo();
           increaseCoin(currentInfo.reward);
-          loadLevelScene("next");
+          const res = loadLevelScene("next");
+          if (!res) {
+            const currentLevel = getCurrentLevel();
+            cc.director.loadScene(`level_${currentLevel}`);
+          }
         };
         if (cc.sys.platform == cc.sys.WECHAT_GAME) {
           openVideoWithCb(call);
@@ -101,7 +98,8 @@ export default class GameBtn extends cc.Component {
         }
         break;
       case "closeModal":
-        toggleModal("AdHeart", false);
+        // toggleModal("AdHeart", false);
+        closeModal();
         break;
       default:
         break;

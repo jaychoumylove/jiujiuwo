@@ -1,7 +1,8 @@
+import { getLoadingModal, toggleModal } from "../util/Common";
 import { getCfgVal, initByStorage, setCfgVal } from "../util/Storage";
 import { getCurrentLevel, setCurrentLevel } from "./User";
 
-const maxLevel = 66;
+const maxLevel = 2;
 export const LevelKey = "userLevel";
 
 export const initLevel = () => {
@@ -82,9 +83,40 @@ export const loadLevelScene = (type: "current" | "next") => {
   const lvInfo = getLevelInfoByType(type);
   if (!lvInfo) return false;
 
-  cc.director.loadScene(`level_${lvInfo.lv}`, () => {
-    setCurrentLevel(lvInfo.lv);
-  });
+  toggleModalWithLoading(lvInfo);
+};
+
+let preloadlv = 0;
+
+const toggleModalWithLoading = (lvInfo) => {
+  if (!preloadlv) {
+    preloadlv = lvInfo.lv;
+    toggleModal("loadingBg", true, () => {
+      cc.director.preloadScene(
+        `level_${lvInfo.lv}`,
+        (c, t) => {
+          const node = getLoadingModal();
+          const target = cc.find("ProgressBar", node);
+          target.getComponent(cc.ProgressBar).progress = parseFloat(
+            (c / t).toPrecision(1)
+          );
+        },
+        (e) => {
+          if (!e) {
+            cc.director.loadScene(`level_${lvInfo.lv}`);
+            setCurrentLevel(lvInfo.lv);
+          }
+          preloadlv = 0;
+        }
+      );
+    });
+  }
+};
+
+export const loadLevelSceneByLv = (lv) => {
+  const lvInfo = getLevelByLvInfo(lv);
+  if (!lvInfo) return false;
+  toggleModalWithLoading(lvInfo);
 };
 
 export const preLoadLevelScene = (type: "current" | "next") => {
