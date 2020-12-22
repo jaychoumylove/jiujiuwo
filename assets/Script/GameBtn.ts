@@ -1,3 +1,5 @@
+import { getCurrentLevel } from "./state/User";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -34,19 +36,20 @@ export default class GameBtn extends cc.Component {
       // case "resume":
       //   this.resumeGame();
       //   break;
-      // case "home":
-      //   this.resume();
-      //   cc.director.loadScene("home");
-      //   break;
-      // case "level":
-      //   this.resume();
-      //   cc.director.loadScene("level");
-      //   break;
+      case "home":
+        cc.director.loadScene("home");
+        break;
+      case "level":
+        cc.director.loadScene("level");
+        break;
       case "replay":
         // this.resume();
         // console.log(cc.director.getScene().name);
         // cc.director.loadScene(cc.director.getScene().name);
-        cc.director.loadScene("level_1");
+        const currentLevel = getCurrentLevel();
+        console.log(currentLevel);
+
+        cc.director.loadScene(`level_${currentLevel}`);
         break;
       // case "jump_level":
       //   this.resume();

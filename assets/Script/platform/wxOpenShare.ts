@@ -1,5 +1,5 @@
 // @ts-nocheck wx
-import { isWx } from "../Util/Common";
+import { isWx } from "../util/Common";
 
 const { ccclass, property } = cc._decorator;
 

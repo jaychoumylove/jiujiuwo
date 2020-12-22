@@ -1,5 +1,5 @@
 import Game from "./Game";
-import { delay, toggleModal } from "./Util/Common";
+import { delay, toggleModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 

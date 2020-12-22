@@ -49,3 +49,18 @@ export const toggleModal = (
   modal.active = state;
   cc.find("bg", modal).active = state;
 };
+
+export const supportNumberGroup = (list: [], number: number) => {
+  if (!list.length) return [];
+  if (!number || number < 1) return list;
+  let newList = [];
+  const length = list.length,
+    lineNum =
+      length % number === 0 ? length / number : Math.floor(length / number + 1);
+
+  for (let i = 0; i < lineNum; i++) {
+    let item = list.slice(i * number, i * number + number);
+    newList.push(item);
+  }
+  return newList;
+};

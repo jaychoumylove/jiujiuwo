@@ -1,5 +1,6 @@
 import HardCore from "./HardCore";
-import { toggleModal } from "./Util/Common";
+import { unlockNextLevel } from "./state/Level";
+import { toggleModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -32,6 +33,7 @@ export default class Game extends cc.Component {
 
   dispatchSuccess() {
     this.state = "win";
+    unlockNextLevel();
     this.cleanHardCord();
   }
 
