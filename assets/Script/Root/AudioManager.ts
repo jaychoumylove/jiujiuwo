@@ -83,7 +83,9 @@ export default class AudioManager extends cc.Component {
     if (this.bgStatus) {
       if (typeof this.bgMusicChannel == "undefined") {
         this.bgMusicChannel = cc.audioEngine.play(this.bgMusic, true, 0.5);
+        console.log("play");
       } else {
+        console.log("resume");
         cc.audioEngine.resume(this.bgMusicChannel);
       }
     }
@@ -91,6 +93,7 @@ export default class AudioManager extends cc.Component {
 
   stopBgMusic() {
     if (this.bgMusicChannel !== undefined) {
+      console.log("pause");
       cc.audioEngine.pause(this.bgMusicChannel);
     }
   }
@@ -111,6 +114,13 @@ export default class AudioManager extends cc.Component {
       this.updateStorageVolume("bg", status);
       status ? this.playBgMusic() : this.stopBgMusic();
     }
+  }
+
+  toggleBgMusicStatus() {
+    const status = !this.bgStatus;
+    this.bgStatus = status;
+    status ? this.playBgMusic() : this.stopBgMusic();
+    this.updateStorageVolume("bg", status);
   }
 
   checkOnceMusicStatus(status: boolean) {

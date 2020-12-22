@@ -63,7 +63,7 @@ export default class GameBtn extends cc.Component {
           cc.director.loadScene(`level_${currentLevel}`);
         }
         break;
-      case "jump_level":
+      case "jumpLevel":
         call = () => {
           loadLevelScene("next");
         };
@@ -73,10 +73,10 @@ export default class GameBtn extends cc.Component {
           call();
         }
         break;
-      case "go_next_level":
+      case "goNextLevel":
         loadLevelScene("next");
         break;
-      case "get_reward":
+      case "getReward":
         cc.log("get_reward");
 
         call = () => {
