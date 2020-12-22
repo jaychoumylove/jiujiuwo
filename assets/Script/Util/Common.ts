@@ -1,4 +1,6 @@
 import AudioManager from "../Root/AudioManager";
+import { getNextLevelInfo } from "../state/Level";
+import { getCurrentLevel } from "../state/User";
 
 export const isJsonString = (str) => {
   try {

@@ -1,5 +1,5 @@
 import { checkHeart, descreaseHeart, setCurrentLevel } from "../state/User";
-import { getAudioManager } from "../util/Common";
+import { getAudioManager, toggleModal } from "../util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -23,7 +23,7 @@ export default class LevelItem extends cc.Component {
     // 加留存，不检测体力
 
     if (!checkHeart()) {
-      console.log("体力不足");
+      toggleModal("AdHeart", true);
       return;
     }
     descreaseHeart();

@@ -48,7 +48,7 @@ export const initLevel = () => {
   return;
 };
 
-export const getNextLevel = () => {
+export const getNextLevelInfo = () => {
   const current = getCurrentLevel();
   let nextLv = {
     lv: current + 1,
@@ -57,9 +57,46 @@ export const getNextLevel = () => {
   return getLevelByLvInfo(nextLv.lv);
 };
 
+export const getCurrentLevelInfo = () => {
+  const current = getCurrentLevel();
+  return getLevelByLvInfo(current);
+};
+
+const getLevelInfoByType = (type: "current" | "next") => {
+  let lvInfo = null;
+  switch (type) {
+    case "current":
+      lvInfo = getCurrentLevelInfo();
+      break;
+    case "next":
+      lvInfo = getNextLevelInfo();
+      break;
+    default:
+      break;
+  }
+  if (!lvInfo) return false;
+  return lvInfo;
+};
+
+export const loadLevelScene = (type: "current" | "next") => {
+  const lvInfo = getLevelInfoByType(type);
+  if (!lvInfo) return false;
+
+  cc.director.loadScene(`level_${lvInfo.lv}`, () => {
+    setCurrentLevel(lvInfo.lv);
+  });
+};
+
+export const preLoadLevelScene = (type: "current" | "next") => {
+  const lvInfo = getLevelInfoByType(type);
+  if (!lvInfo) return false;
+
+  cc.director.preloadScene(`level_${lvInfo.lv}`);
+};
+
 export const unlockNextLevel = () => {
   const currentLevel = getCurrentLevel();
-  const nextLv = getNextLevel();
+  const nextLv = getNextLevelInfo();
   if (!nextLv) return;
 
   let lv = getCfgVal(LevelKey);
@@ -73,8 +110,6 @@ export const unlockNextLevel = () => {
     }
     return item;
   });
-
-  setCurrentLevel(nextLv.lv);
 
   if (lv != newLv) {
     setCfgVal(LevelKey, newLv);

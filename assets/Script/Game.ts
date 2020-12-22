@@ -1,6 +1,5 @@
 import HardCore from "./HardCore";
-import { unlockNextLevel } from "./state/Level";
-import { toggleModal } from "./util/Common";
+import { preLoadLevelScene, unlockNextLevel } from "./state/Level";
 
 const { ccclass, property } = cc._decorator;
 
@@ -16,6 +15,7 @@ export default class Game extends cc.Component {
 
   onLoad() {
     this.initPhysics();
+    preLoadLevelScene("next");
   }
 
   initPhysics() {

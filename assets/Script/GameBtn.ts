@@ -1,4 +1,17 @@
-import { getCurrentLevel } from "./state/User";
+import { openVideoWithCb } from "./platform/wxVideo";
+import {
+  getCurrentLevelInfo,
+  getLevelByLvInfo,
+  getNextLevelInfo,
+  loadLevelScene,
+} from "./state/Level";
+import {
+  checkHeart,
+  getCurrentLevel,
+  increaseCoin,
+  increaseHeartByAd,
+} from "./state/User";
+import { isWx, toggleModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -22,12 +35,9 @@ export default class GameBtn extends cc.Component {
   }
 
   handleClick(evt, param) {
-    console.log("touch in");
-
     if (param) {
       this.type = param;
     }
-    // getAudioManager().playOnceMusic("button");
     let call: Function;
     switch (this.type) {
       // case "pause":
@@ -47,55 +57,52 @@ export default class GameBtn extends cc.Component {
         // console.log(cc.director.getScene().name);
         // cc.director.loadScene(cc.director.getScene().name);
         const currentLevel = getCurrentLevel();
-        console.log(currentLevel);
-
-        cc.director.loadScene(`level_${currentLevel}`);
+        if (!checkHeart()) {
+          toggleModal("AdHeart", true);
+        } else {
+          cc.director.loadScene(`level_${currentLevel}`);
+        }
         break;
-      // case "jump_level":
-      //   this.resume();
-      //   call = () => {
-      //     loadLevelScene("next");
-      //   };
-      //   if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-      //     openVideoWithCb(call);
-      //   } else {
-      //     call();
-      //   }
-      //   break;
-      // case "go_next_level":
-      //   this.resume();
-      //   loadLevelScene("next");
-      //   break;
-      // case "get_reward":
-      //   this.resume();
-      //   cc.log("get_reward");
+      case "jump_level":
+        call = () => {
+          loadLevelScene("next");
+        };
+        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+          openVideoWithCb(call);
+        } else {
+          call();
+        }
+        break;
+      case "go_next_level":
+        loadLevelScene("next");
+        break;
+      case "get_reward":
+        cc.log("get_reward");
 
-      //   call = () => {
-      //     const currentLevel = getCurrentLevel();
-      //     increaseCoin(currentLevel.reward);
-      //     const nextLv = getNextLevel();
-      //     if (nextLv) {
-      //       loadLevelScene("next");
-      //     } else {
-      //       this.node.active = false;
-      //     }
-      //   };
-      //   if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-      //     openVideoWithCb(call);
-      //   } else {
-      //     call();
-      //   }
-      //   break;
-      // case "getHeart":
-      //   call = () => {
-      //     increaseHeartByAd();
-      //   };
-      //   if (isWx()) {
-      //     openVideoWithCb(call);
-      //   } else {
-      //     call();
-      //   }
-      //   break;
+        call = () => {
+          const currentInfo = getCurrentLevelInfo();
+          increaseCoin(currentInfo.reward);
+          loadLevelScene("next");
+        };
+        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+          openVideoWithCb(call);
+        } else {
+          call();
+        }
+        break;
+      case "getHeart":
+        call = () => {
+          increaseHeartByAd();
+        };
+        if (isWx()) {
+          openVideoWithCb(call);
+        } else {
+          call();
+        }
+        break;
+      case "closeModal":
+        toggleModal("AdHeart", false);
+        break;
       default:
         break;
     }
