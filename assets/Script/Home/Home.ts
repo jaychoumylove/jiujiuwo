@@ -27,11 +27,14 @@ export default class Home extends cc.Component {
   }
 
   handleStart() {
-    // if (!checkHeart()) {
-    //   toggleModal("AdHeart", true);
-    //   return;
-    // }
-    // descreaseHeart();
+    if (!checkHeart()) {
+      toggleModal("AdHeart", true, () => {
+        // descreaseHeart();
+        loadLevelScene("current");
+      });
+      return;
+    }
+    descreaseHeart();
     loadLevelScene("current");
   }
 }

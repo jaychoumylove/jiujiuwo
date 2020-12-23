@@ -1,7 +1,7 @@
 {
   "appid": "wx209f02113448c818",
   "orientation": "portrait",
-  "separate_engine": false,
+  "separate_engine": true,
   "REMOTE_SERVER_ROOT": "https://res.anaculture.com/game/zg/v1.0.2",
   "subContext": "",
   "startSceneAssetBundle": false

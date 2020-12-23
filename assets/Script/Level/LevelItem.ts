@@ -21,13 +21,14 @@ export default class LevelItem extends cc.Component {
     const { lv, status } = this.lvInfo;
     // getAudioManager().playOnceMusic("button");
     if (status == "lock") return;
-    // 加留存，不检测体力
-
-    // if (!checkHeart()) {
-    //   toggleModal("AdHeart", true);
-    //   return;
-    // }
-    // descreaseHeart();
+    if (!checkHeart()) {
+      toggleModal("AdHeart", true, () => {
+        // descreaseHeart();
+        loadLevelSceneByLv(lv);
+      });
+      return;
+    }
+    descreaseHeart();
     loadLevelSceneByLv(lv);
   }
 

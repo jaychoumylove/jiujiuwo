@@ -1,3 +1,5 @@
+import { openVideoWithCb } from "../platform/wxVideo";
+import { isWx } from "../util/Common";
 import { getCfgVal, initByStorage, setCfgVal } from "../util/Storage";
 
 export const UserKey = "userState";
@@ -83,11 +85,20 @@ export const increaseHeart = () => {
   setCfgVal(UserKey, state);
 };
 
-export const increaseHeartByAd = () => {
-  let state = getUser();
-  state.heart += 2;
-  setCfgVal(UserKey, state);
-  resetAddTime();
+export const increaseHeartByAd = (call?: Function) => {
+  let platformCall = () => {
+    let state = getUser();
+    state.heart += 2;
+    setCfgVal(UserKey, state);
+    if (typeof call == "function") {
+      call();
+    }
+  };
+  if (isWx()) {
+    openVideoWithCb(platformCall);
+  } else {
+    platformCall();
+  }
 };
 
 export const descreaseHeart = () => {
@@ -108,6 +119,13 @@ export const getCurrentLevel = () => {
   return state.current;
 };
 
+export const setUserHeart = (number: number) => {
+  let state = getUser();
+  state.heart = number;
+  setCfgVal(UserKey, state);
+};
+
 export const checkHeart = () => {
   return getUser().heart > 0;
+  // return true;
 };

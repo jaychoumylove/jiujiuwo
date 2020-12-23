@@ -58,9 +58,12 @@ export default class GameBtn extends cc.Component {
         break;
       case "jumpLevel":
         call = () => {
-          loadLevelScene("next");
+          const res = loadLevelScene("next");
+          if (!res) {
+            this.node.destroy();
+          }
         };
-        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
+        if (isWx()) {
           openVideoWithCb(call);
         } else {
           call();
@@ -71,7 +74,6 @@ export default class GameBtn extends cc.Component {
         break;
       case "getReward":
         cc.log("get_reward");
-
         call = () => {
           const currentInfo = getCurrentLevelInfo();
           increaseCoin(currentInfo.reward);
@@ -80,16 +82,6 @@ export default class GameBtn extends cc.Component {
             const currentLevel = getCurrentLevel();
             cc.director.loadScene(`level_${currentLevel}`);
           }
-        };
-        if (cc.sys.platform == cc.sys.WECHAT_GAME) {
-          openVideoWithCb(call);
-        } else {
-          call();
-        }
-        break;
-      case "getHeart":
-        call = () => {
-          increaseHeartByAd();
         };
         if (isWx()) {
           openVideoWithCb(call);

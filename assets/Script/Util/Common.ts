@@ -65,6 +65,11 @@ export const toggleModal = (
         gameState && gameState();
       }
     }
+    if (contanier == "AdHeart") {
+      if (typeof gameState == "function") {
+        contanierNode.getComponent("AdHeart").init(gameState);
+      }
+    }
   } else {
     modal.children.map((childNode) => {
       childNode.active = false;

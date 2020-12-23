@@ -96,7 +96,7 @@ const toggleModalWithLoading = (lvInfo) => {
         `level_${lvInfo.lv}`,
         (c, t) => {
           const node = getLoadingModal();
-          const target = cc.find("ProgressBar", node);
+          const target = cc.find("container/ProgressBar", node);
           target.getComponent(cc.ProgressBar).progress = parseFloat(
             (c / t).toPrecision(1)
           );

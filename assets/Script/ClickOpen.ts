@@ -1,5 +1,5 @@
 import HardCore from "./HardCore";
-import { closeModal, delay } from "./util/Common";
+import { closeModal } from "./util/Common";
 
 const { ccclass, property } = cc._decorator;
 
@@ -25,7 +25,7 @@ export default class ClickOpen extends cc.Component {
       const progressNumber = progess.getComponent(cc.ProgressBar).progress;
       if (!this.descease && progressNumber == 1) {
         this.cleanProgressTimer();
-            
+
         cc.find("Canvas/affix").children.map((item: cc.Node) => {
           const script: HardCore = item.getComponent("HardCore");
           script.add();
@@ -76,16 +76,29 @@ export default class ClickOpen extends cc.Component {
   }
 
   initShapeAction() {
-    const target = cc.find("monster", this.node);
+    const monster = cc.find("monster", this.node);
+    const target = cc.instantiate(monster);
     const dft = {
-        scale: this.node.scale,
+        scale: 0.7,
+        opacity: 255,
       },
       act = {
-        scale: 0.8,
+        scale: 1.4,
+        opacity: 0,
       };
-    let up = cc.tween().to(0.6, act),
-      down = cc.tween().to(0.6, dft),
-      action = cc.tween().then(up).then(down);
+    let up = cc
+        .tween()
+        .to(0.5, act)
+        .call(() => {
+          Object.keys(dft).map((item) => {
+            target[item] = dft[item];
+          });
+        }),
+      action = cc.tween().then(up);
+    Object.keys(dft).map((item) => {
+      target[item] = dft[item];
+    });
+    this.node.addChild(target);
     cc.tween(target).repeatForever(action).start();
   }
 }
